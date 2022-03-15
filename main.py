@@ -1,63 +1,55 @@
-# Run this script as root
-
+#########Easy Web Blocker by Giniroisenkou#########
+###################################################
 import time
-from datetime import datetime as dt
-# change hosts path according to your OS
-hosts_path = "/etc/hosts"
-# localhost's IP
-redirect = "127.0.0.1"
+import os
+import platform
 
-# websites That you want to block
-website_list = ["https://www.youtube.com", "youtube.com", "facebook.com"]
+system = platform.system()
+redirect_to_site = "127.0.0.1"
 
-"""
-while True:
-	CurrentH = int(datetime.now().hour)
-	print(CurrentH)
-	if CurrentH == 22:
-		with open(hosts_path, 'r+') as file:
-			content=file.readlines()
-			file.seek(0)
-			for line in content:
-				if not any(website in line for website in website_list):
-					file.write(line)
-			# removing hostnmes from host file
-			file.truncate()
-	else:
-		with open(hosts_path, 'r+') as file:
-			content = file.read()
-			for website in website_list:
-				if website in content:
-					pass
-				else:
-					# mapping hostnames to your localhost IP address
-					file.write(redirect + " " + website + "\n")
-	time.sleep(60)
-"""
 
-while True:
+if system == "Linux":
+    path_hosts = "/etc/hosts"
+elif system == "Windows":
+    path_hosts = "C:\Windows\System32\drivers\etc\hosts"
+else:
+    path_hosts = "/private/etc/hosts"
 
-	# time of your work
-	if dt(dt.now().year, dt.now().month, dt.now().day, 0)< dt.now() < dt(dt.now().year, dt.now().month, dt.now().day, 16):
-		print("Working hours...")
-		with open(hosts_path, 'r+') as file:
-			content = file.read()
-			for website in website_list:
-				if website in content:
-					pass
-				else:
-					# mapping hostnames to your localhost IP address
-					file.write(redirect + " " + website + "\n")
-	else:
-		with open(hosts_path, 'r+') as file:
-			content = file.readlines()
-			file.seek(0)
-			for line in content:
-				if not any(website in line for website in website_list):
-					file.write(line)
+def read_hosts():
+    var = open(path_hosts, encoding='utf-8').read()
+    return var
 
-			# removing hostnmes from host file
-			file.truncate()
+try:
+    site_file = open("links.txt", encoding='utf-8').readlines()
+    print(f"\nCurrent Blocked Websites:\n{'-'*50}\n{read_hosts()}\n{'-'*50}")
 
-		print("Fun hours...")
-	time.sleep(5)
+except Exception as ERR:
+    print(ERR)
+
+
+insert_mode = input(f"You have a total of {len(site_file)} \"links\" on your links.txt \nWould you like to \"ADD\" or \"REMOVE\" to the filter?")
+
+if insert_mode[0].lower() == "a":
+    with open(path_hosts, 'r+') as file:
+        content = file.read()
+        for website in site_file:
+            if website in content:
+                pass
+            else:
+                file.write(redirect_to_site + "	" + website + "\n")
+
+else:
+    with open(path_hosts, 'r+') as file:
+        content = file.readlines()
+        file.seek(0)
+        for line in content:
+            if not any(site in line for site in site_file):
+                file.write(line)
+        file.truncate()
+
+
+print(f"\n\nDone, These are the Blocked Websites:\n{'-' * 50}\n{read_hosts()}\n{'-' * 50}")
+
+
+
+print("Note: You might need to flush your DNS if the change does not apply")
