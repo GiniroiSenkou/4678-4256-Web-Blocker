@@ -1,4 +1,4 @@
-# Easy Web Blocker
+#Web Blocker
 
 Simple script to disable certain websites whenever you are working/studying on your computer and you might unconsciously get distracted by unwanted content. No more!
 
