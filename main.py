@@ -1,5 +1,3 @@
-#########Easy Web Blocker by Giniroisenkou#########
-###################################################
 import time
 import os
 import platform
